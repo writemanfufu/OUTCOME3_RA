@@ -25,8 +25,6 @@
   <h1 style="text-align:center;">Guided Learning Records</h1>
 
   
-  <p style="color:gray; font-size:0.9em;">Found records: <xsl:value-of select="count(//*[local-name()='record'][@type='guided'])"/></p>
-
   
   <xsl:for-each select="//*[local-name()='record'][@type='guided']">
     <xsl:sort select="*[local-name()='language']" order="ascending"/>
