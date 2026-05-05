@@ -24,15 +24,18 @@
 <body>
   <h1 style="text-align:center;">Guided Learning Records</h1>
 
-  <!-- 循环所有 type="guided" 的记录，按语言名升序排序 -->
-  <xsl:for-each select="//record[@type='guided']">
-    <xsl:sort select="language" order="ascending"/>
+  
+  <p style="color:gray; font-size:0.9em;">Found records: <xsl:value-of select="count(//*[local-name()='record'][@type='guided'])"/></p>
+
+  
+  <xsl:for-each select="//*[local-name()='record'][@type='guided']">
+    <xsl:sort select="*[local-name()='language']" order="ascending"/>
     <div class="record">
-      <div class="language"><xsl:value-of select="language"/></div>
-      <div class="description"><xsl:value-of select="description"/></div>
+      <div class="language"><xsl:value-of select="*[local-name()='language']"/></div>
+      <div class="description"><xsl:value-of select="*[local-name()='description']"/></div>
       <div class="grades">
-        <!-- Level A 的 result -->
-        <xsl:for-each select="grades/result[@level='A']">
+        
+        <xsl:for-each select="*[local-name()='grades']/*[local-name()='result'][@level='A']">
           <div class="grade">
             A:
             <xsl:choose>
@@ -41,8 +44,8 @@
             </xsl:choose>
           </div>
         </xsl:for-each>
-        <!-- Level B 的 result -->
-        <xsl:for-each select="grades/result[@level='B']">
+        
+        <xsl:for-each select="*[local-name()='grades']/*[local-name()='result'][@level='B']">
           <div class="grade">
             B:
             <xsl:choose>
@@ -51,8 +54,8 @@
             </xsl:choose>
           </div>
         </xsl:for-each>
-        <!-- Level C 的 result -->
-        <xsl:for-each select="grades/result[@level='C']">
+        
+        <xsl:for-each select="*[local-name()='grades']/*[local-name()='result'][@level='C']">
           <div class="grade">
             C:
             <xsl:choose>
