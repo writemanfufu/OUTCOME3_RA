@@ -67,7 +67,7 @@
   </xsl:for-each>
 
   <footer>
-    <p>&#xA9; Language Learning Club</p>
+    <p>&#xA9; College Productions Ltd</p>
   </footer>
 </body>
 </html>
