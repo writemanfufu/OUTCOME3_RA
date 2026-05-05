@@ -2,50 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>XML to HTML Viewer - Guided Learning Records</title>
+  <title>XML to HTML Viewer (XSLT) -- Outcome 3</title>
   <style>
     body { font-family: Arial, sans-serif; max-width: 1000px; margin: 20px auto; padding: 0 20px; }
     .error { color: red; background: #ffe6e6; padding: 10px; border-left: 5px solid red; }
-    button { margin: 10px 5px; padding: 6px 12px; cursor: pointer; }
     #output { margin-top: 20px; }
   </style>
 </head>
 <body>
-  <h2>XSLT Transformation Viewer - Guided Learning Records</h2>
-  <button id="transformBtn">Transform XML</button>
-  <div id="output">Click the button to load learning_records.xml and apply style.xsl.</div>
+  <h2>XSLT Transformation Viewer -- Guided Learning Records</h2>
+  <div id="output">Loading and transforming...</div>
 
   <script>
     (function() {
-      const xmlUrl = 'learning_records.xml';   
-      const xslUrl = 'style.xsl';              
-      const btn = document.getElementById('transformBtn');
-      const out = document.getElementById('output');
+      var xmlURL = 'learning_records.xml';
+      var xslURL = 'style.xsl';
 
-      async function loadXML(url) {
-        const resp = await fetch(url);
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}: ${resp.statusText}`);
-        const text = await resp.text();
-        return new DOMParser().parseFromString(text, 'application/xml');
-      }
-
-      async function transform() {
-        out.innerHTML = '<em>Transforming...</em>';
-        try {
-          const [xmlDoc, xslDoc] = await Promise.all([loadXML(xmlUrl), loadXML(xslUrl)]);
-          const parseError = xmlDoc.querySelector('parsererror');
-          if (parseError) throw new Error('XML parsing error: ' + parseError.textContent);
-          const processor = new XSLTProcessor();
-          processor.importStylesheet(xslDoc);
-          const resultFragment = processor.transformToFragment(xmlDoc, document);
-          out.innerHTML = '';
-          out.appendChild(resultFragment);
-        } catch (err) {
-          out.innerHTML = `<div class="error"><strong>Error:</strong> ${err.message}</div>`;
+      try {
+        var request;
+        if (window.XMLHttpRequest) {
+          request = new XMLHttpRequest();
+        } else {
+          request = new ActiveXObject("Microsoft.XMLHTTP");
         }
-      }
 
-      btn.addEventListener('click', transform);
+       
+        request.open("GET", xmlURL, false);
+        request.send();
+        var xmlDoc = request.responseXML;
+
+        
+        request.open("GET", xslURL, false);
+        request.send();
+        var xslDoc = request.responseXML;
+
+        
+        if (window.ActiveXObject) {
+        
+          var transformed = xmlDoc.transformNode(xslDoc);
+          document.getElementById("output").innerHTML = transformed;
+        } else {
+       
+          var processor = new XSLTProcessor();
+          processor.importStylesheet(xslDoc);
+          var fragment = processor.transformToFragment(xmlDoc, document);
+          document.getElementById("output").innerHTML = '';
+          document.getElementById("output").appendChild(fragment);
+        }
+      } catch (err) {
+        document.getElementById("output").innerHTML = '<div class="error"><strong>Error:</strong> ' + err.message + '</div>';
+      }
     })();
   </script>
 </body>
